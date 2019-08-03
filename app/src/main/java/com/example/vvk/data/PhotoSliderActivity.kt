@@ -15,6 +15,7 @@ class PhotoSliderActivity : AppCompatActivity() {
         setContentView(R.layout.activity_photo_slider)
 
         val photos : List<Photo> = intent.getParcelableArrayListExtra("photos")
+        val position : Int = intent.getIntExtra("position", 0)
         val viewPager = findViewById<ViewPager>(R.id.view_pager)
         val adapter = PhotosFragmentPagerAdapter(supportFragmentManager, photos)
         val tvPosition = findViewById<TextView>(R.id.tv_position)
@@ -41,5 +42,6 @@ class PhotoSliderActivity : AppCompatActivity() {
         }
 
         viewPager.adapter = adapter
+        viewPager.currentItem = position
     }
 }

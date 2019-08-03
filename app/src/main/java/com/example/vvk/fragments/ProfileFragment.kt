@@ -28,7 +28,7 @@ import java.lang.Exception
 
 class ProfileFragment : Fragment() {
 
-    private val PROFILE_PHOTO_REQUEST = "PhotoProfileRequest"
+    private val profilePhotoRequest = "PhotoProfileRequest"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +42,7 @@ class ProfileFragment : Fragment() {
 
         VK.execute(VKProfileRequest(id), object : VKApiCallback<VKProfile> {
             override fun fail(error: VKApiExecutionException) {
-                Log.d(PROFILE_PHOTO_REQUEST, error.detailMessage)
+                Log.d(profilePhotoRequest, error.detailMessage)
             }
 
             override fun success(result: VKProfile) {
@@ -52,7 +52,7 @@ class ProfileFragment : Fragment() {
 
         VK.execute(VKPhotosProfileRequest(id), object  : VKApiCallback<List<VKPhotoProfile>> {
             override fun fail(error: VKApiExecutionException) {
-                Log.d(PROFILE_PHOTO_REQUEST, error.detailMessage)
+                Log.d(profilePhotoRequest, error.detailMessage)
             }
 
             override fun success(result: List<VKPhotoProfile>) {
@@ -65,7 +65,7 @@ class ProfileFragment : Fragment() {
 
     private fun bindInfo(view : View, profile : VKProfile) {
         val tvName = view.findViewById<TextView>(R.id.tv_name)
-        val tvCountry = view.findViewById<TextView>(R.id.tv_name)
+        val tvCountry = view.findViewById<TextView>(R.id.tv_contry)
         val tvCity = view.findViewById<TextView>(R.id.tv_city)
         val tvBirthDate = view.findViewById<TextView>(R.id.tv_bdate)
         val imProfile = view.findViewById<ImageView>(R.id.im_profile)
@@ -74,15 +74,10 @@ class ProfileFragment : Fragment() {
         val pbProfileImage = view.findViewById<ProgressBar>(R.id.pb_profile_image)
         val profileInfoContainer = view.findViewById<ConstraintLayout>(R.id.profile_info_container)
 
-        val name = "${profile.firstName} ${profile.lastName}"
-        val country = profile.country
-        val city = profile.homeTown
-        val bDate = profile.bDate
-
-        tvName.text = name
-        tvCountry.text = country
-        tvCity.text = city
-        tvBirthDate.text = bDate
+        tvName.text = profile.name
+        tvCountry.text = profile.country
+        tvCity.text = profile.homeTown
+        tvBirthDate.text = profile.bDate
 
         pbInfo.visibility = View.INVISIBLE
         profileInfoContainer.visibility = View.VISIBLE

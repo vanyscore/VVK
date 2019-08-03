@@ -2,12 +2,14 @@ package com.example.vvk.data
 
 import org.json.JSONObject
 
-data class VKProfile(val id : String,
+class VKProfile private constructor(val id : String,
                      val firstName : String, val lastName : String,
                      val bDate : String,
                      val country : String?, val homeTown : String?,
                      val profilePhoto : String,
                      val institute : String) {
+    val name = "$firstName $lastName"
+
     companion object {
         fun parse(response : JSONObject) : VKProfile {
             val id = response.getString("id")

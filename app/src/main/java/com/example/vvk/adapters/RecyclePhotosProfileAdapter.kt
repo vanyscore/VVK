@@ -44,7 +44,7 @@ class RecyclePhotosProfileAdapter(private val context : Context?,
         holder.loadImage(position)
     }
 
-    inner class ProfilePhotoViewHolder(view : View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    inner class ProfilePhotoViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
         val imPhoto : ImageView = view.findViewById(R.id.im_profile_photo)
         val pb : ProgressBar = view.findViewById(R.id.pb_profile_photo)
 
@@ -71,6 +71,7 @@ class RecyclePhotosProfileAdapter(private val context : Context?,
         override fun onClick(v: View?) {
             val intent = Intent(context, PhotoSliderActivity::class.java)
             intent.putParcelableArrayListExtra("photos", sliderPhotos)
+            intent.putExtra("position", adapterPosition)
             context!!.startActivity(intent)
         }
     }

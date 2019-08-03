@@ -2,7 +2,7 @@ package com.example.vvk.data
 
 import org.json.JSONObject
 
-class VKPhotoProfile(val urlP : String, val urlMaxSize : String, val likes : Int) {
+class VKPhotoProfile private constructor(val urlP : String, val urlMaxSize : String, val likes : Int) {
     companion object {
         fun parse(photo : JSONObject) : VKPhotoProfile {
             val sizes = photo.getJSONArray("sizes")

@@ -2,7 +2,7 @@ package com.example.vvk.data
 
 import org.json.JSONObject
 
-class VKFriend(val id : String,
+class VKFriend private constructor(val id : String,
                val name : String,
                val institute : String,
                val isOnline : Boolean,
