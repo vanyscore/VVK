@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vvk.R
@@ -46,6 +47,7 @@ class ProfileFragment : Fragment() {
             }
 
             override fun success(result: VKProfile) {
+                loadPhoto(view, result.photoUrl)
                 bindInfo(view, result)
             }
         })
@@ -64,31 +66,60 @@ class ProfileFragment : Fragment() {
     }
 
     private fun bindInfo(view : View, profile : VKProfile) {
-        val tvName = view.findViewById<TextView>(R.id.tv_name)
-        val tvCountry = view.findViewById<TextView>(R.id.tv_contry)
-        val tvCity = view.findViewById<TextView>(R.id.tv_city)
-        val tvBirthDate = view.findViewById<TextView>(R.id.tv_bdate)
-        val imProfile = view.findViewById<ImageView>(R.id.im_profile)
-
         val pbInfo = view.findViewById<ProgressBar>(R.id.pb_profile_info)
-        val pbProfileImage = view.findViewById<ProgressBar>(R.id.pb_profile_image)
-        val profileInfoContainer = view.findViewById<ConstraintLayout>(R.id.profile_info_container)
+        val profileInfoContainer = view.findViewById<LinearLayout>(R.id.profile_info_container)
 
-        tvName.text = profile.name
-        tvCountry.text = profile.country
-        tvCity.text = profile.homeTown
-        tvBirthDate.text = profile.bDate
+        val tvOnline = view.findViewById<TextView>(R.id.tv_online)
+        if (profile.online == 0) {
+            tvOnline.setTextColor(activity!!.resources.getColor(R.color.colorRed))
+            tvOnline.text = "Не в сети"
+        } else {
+            tvOnline.setTextColor(activity!!.resources.getColor(R.color.colorGreen))
+            tvOnline.text = "В сети"
+        }
+
+        view.findViewById<TextView>(R.id.tv_name).text = profile.name
+
+        if (profile.country.isNotEmpty()) {
+            view.findViewById<LinearLayout>(R.id.ll_country).visibility = View.VISIBLE
+            view.findViewById<TextView>(R.id.tv_contry).text = profile.country
+        }
+
+        if (profile.city.isNotEmpty()) {
+            view.findViewById<LinearLayout>(R.id.ll_city).visibility = View.VISIBLE
+            view.findViewById<TextView>(R.id.tv_city).text = profile.city
+        }
+
+        if (profile.birthday.isNotEmpty()) {
+            view.findViewById<LinearLayout>(R.id.ll_birthday).visibility = View.VISIBLE
+            view.findViewById<TextView>(R.id.tv_bdate).text = profile.birthday
+        }
+
+        if (profile.institute.isNotEmpty()) {
+            view.findViewById<LinearLayout>(R.id.ll_institute).visibility = View.VISIBLE
+            view.findViewById<TextView>(R.id.tv_institute).text = profile.institute
+        }
+
+        if (profile.status.isNotEmpty()) {
+            view.findViewById<CardView>(R.id.cv_status).visibility = View.VISIBLE
+            view.findViewById<TextView>(R.id.tv_status).text = profile.status
+        }
 
         pbInfo.visibility = View.INVISIBLE
         profileInfoContainer.visibility = View.VISIBLE
+    }
 
-        Picasso.get().load(Uri.parse(profile.profilePhoto))
-            .networkPolicy(NetworkPolicy.NO_CACHE, NetworkPolicy.NO_STORE)
-            .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-            .into(imProfile, object : Callback {
+    private fun loadPhoto(view : View, url : String) {
+        val image : ImageView = view.findViewById(R.id.im_profile)
+        val progressBar : ProgressBar = view.findViewById(R.id.pb_im_profile)
+
+        Picasso.get().load(Uri.parse(url))
+            .networkPolicy(NetworkPolicy.NO_STORE, NetworkPolicy.NO_CACHE)
+            .memoryPolicy(MemoryPolicy.NO_STORE, MemoryPolicy.NO_CACHE)
+            .into(image, object : Callback {
                 override fun onSuccess() {
-                    pbProfileImage.visibility = View.INVISIBLE
-                    imProfile.visibility = View.VISIBLE
+                    progressBar.visibility = View.INVISIBLE
+                    image.visibility = View.VISIBLE
                 }
 
                 override fun onError(e: Exception?) {
